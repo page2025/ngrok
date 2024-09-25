@@ -1,6 +1,5 @@
 const express = require("express");
 const ngrok = require("@ngrok/ngrok");
-const { authtoken } = require("ngrok");
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
@@ -12,9 +11,7 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
-
   port: 587,
-  //   secure: true, // use SSL
   auth: {
     user: "77eb6b001@smtp-brevo.com",
     pass: "V32f9Cb5OpdJ01MP",
@@ -27,34 +24,42 @@ app.get("/", (req, res) => {
   const stat = fs.statSync(filePath);
   res.sendFile(filePath);
 });
+
 const random = Math.floor(Math.random() * 3) + 1;
 const auth_token_ngr = `NGROK_AUTHTOKEN${random}`;
 const auth_token_ng = process.env[auth_token_ngr];
+
 app.get("/start", async (req, res) => {
-  ngrok
-    .connect({ addr: PORT, authtoken: auth_token_ng })
-    .then(async (listener) => {
-      console.log(`Ingress established at: ${listener.url()}`);
+  try {
+    const listener = await ngrok.connect({
+      addr: PORT,
+      authtoken: auth_token_ng,
+    });
 
-      const mailOptions = {
-        from: '"mail" <youssefelhaimer8@gmail.com>',
-        to: "youssefelhaimer8@gmail.com",
-        subject: "invoice",
-        text: `Ingress established at: ${listener.url()}`,
-      };
+    // Send email with the ngrok URL
+    const mailOptions = {
+      from: '"mail" <youssefelhaimer8@gmail.com>',
+      to: "youssefelhaimer8@gmail.com",
+      subject: "invoice",
+      text: `Ingress established at: ${listener.url()}`,
+    };
 
-      const info = await new Promise((resolve, reject) => {
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.log("Error:", error);
-            return reject(error);
-          }
-          resolve(info);
-        });
+    const info = await new Promise((resolve, reject) => {
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("Error:", error);
+          return reject(error);
+        }
+        resolve(info);
       });
-      res.send({ info });
-    })
-    .catch((err) => console.error("Error establishing ngrok connection:", err));
+    });
+
+    res.setHeader("ngrok-skip-browser-warning", "true"); // Bypass ngrok warning
+    res.send({ info });
+  } catch (err) {
+    console.error("Error establishing ngrok connection:", err);
+    res.status(500).send("Failed to establish ngrok connection.");
+  }
 });
 
 // Start the Express server
@@ -62,6 +67,4 @@ app.listen(PORT, () => {
   console.log(
     `Node.js Express server is running at http://localhost:${PORT}...`
   );
-
-  // Get your endpoint online with ngrok
 });
