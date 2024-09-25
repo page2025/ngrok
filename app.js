@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 });
 const random = Math.floor(Math.random() * 3) + 1;
 const auth_token_ngr = `NGROK_AUTHTOKEN${random}`;
-const auth_token_ng = process.env[auth_token_ngr];
+const auth_token_ng = process.env.NGROK_AUTHTOKEN1;
 app.get("/start", async (req, res) => {
   ngrok
     .connect({ addr: PORT, authtoken: auth_token_ng })
