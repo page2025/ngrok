@@ -27,16 +27,10 @@ app.get("/", (req, res) => {
   const stat = fs.statSync(filePath);
   res.sendFile(filePath);
 });
-
-const auth_token_ng = process.env.NGROK_AUTHTOKEN;
-
-// Start the Express server
-app.listen(PORT, () => {
-  console.log(
-    `Node.js Express server is running at http://localhost:${PORT}...`
-  );
-
-  // Get your endpoint online with ngrok
+const random = Math.floor(Math.random() * 3) + 1;
+const auth_token_ngr = `NGROK_AUTHTOKEN${random}`;
+const auth_token_ng = process.env[auth_token_ngr];
+app.get("/start", async (req, res) => {
   ngrok
     .connect({ addr: PORT, authtoken: auth_token_ng })
     .then(async (listener) => {
@@ -58,6 +52,16 @@ app.listen(PORT, () => {
           resolve(info);
         });
       });
+      res.send({ info });
     })
     .catch((err) => console.error("Error establishing ngrok connection:", err));
+});
+
+// Start the Express server
+app.listen(PORT, () => {
+  console.log(
+    `Node.js Express server is running at http://localhost:${PORT}...`
+  );
+
+  // Get your endpoint online with ngrok
 });
