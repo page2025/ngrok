@@ -3,7 +3,6 @@ const ngrok = require("@ngrok/ngrok");
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
-// Create an Express application
 const app = express();
 const PORT = 8080;
 
@@ -21,47 +20,41 @@ const transporter = nodemailer.createTransport({
 // Define a route
 app.get("/", (req, res) => {
   const filePath = path.join(__dirname, "page.html");
-  const stat = fs.statSync(filePath);
   res.sendFile(filePath);
 });
 
-const random = Math.floor(Math.random() * 3) + 1;
+const random = Math.floor(Math.random() * 2) + 1;
 const auth_token_ngr = `NGROK_AUTHTOKEN${random}`;
 const auth_token_ng = process.env[auth_token_ngr];
 
 app.get("/start", async (req, res) => {
   try {
+    // Start ngrok
     const listener = await ngrok.connect({
       addr: PORT,
       authtoken: auth_token_ng,
+      request_header_add: [
+        "ngrok-skip-browser-warning:true", // Skip browser warning
+      ],
     });
 
-    // Send email with the ngrok URL
+    // Email options
     const mailOptions = {
       from: '"mail" <youssefelhaimer8@gmail.com>',
       to: "youssefelhaimer8@gmail.com",
-      subject: "invoice",
-      text: `Ingress established at: ${listener.url()}`,
+      subject: "Ngrok URL",
+      text: `Ingress established at: ${listener}`,
     };
 
-    const info = await new Promise((resolve, reject) => {
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log("Error:", error);
-          return reject(error);
-        }
-        resolve(info);
-      });
-    });
+    // Send email with ngrok URL
+    await transporter.sendMail(mailOptions);
 
-    res.setHeader("ngrok-skip-browser-warning", "true"); // Bypass ngrok warning
-    res.send({ info });
+    res.send({ url: listener.url() });
   } catch (err) {
     console.error("Error establishing ngrok connection:", err);
     res.status(500).send("Failed to establish ngrok connection.");
   }
 });
-
 // Start the Express server
 app.listen(PORT, () => {
   console.log(
