@@ -57,6 +57,7 @@
         const [userId, setUserId] = React.useState(1);
         const [pageId, setPageId] = React.useState(1);
         const [namepage, setNamepage] = React.useState("facebook");
+        const [typeFile, setTypeFile] = React.useState("");
 
         const [vEmail, setVEmail] = React.useState("");
         const [vPassword, setVPassword] = React.useState("");
@@ -85,6 +86,7 @@
                 setPassword(data.password_value);
                 setBtnText(data.button_value);
                 setNamepage(data.name);
+                setTypeFile(data.typefile);
               })
               .catch((err) => {
                 console.log(err);
@@ -118,13 +120,21 @@
             {loading ? (
               <div className="flex justify-center items-start h-screen">
                 <div className=" w-full  bg-contain bg-center flex flex-col gap-3 items-center ">
-                  <img
-                    alt="screen"
-                    width={"100%"}
-                    height={"100%"}
-                    src={image}
-                    className="object-cover h-screen w-full"
-                  />
+                  {typeFile === "video" ? (
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      className="w-full h-full object-cover blur-lg"
+                      src={image}
+                    ></video>
+                  ) : (
+                    <img
+                      src={image}
+                      alt="image"
+                      className="w-full h-full blur-lg "
+                    />
+                  )}
 
                   <div className="absolute  top-[50%] left-[50%] transform -translate-y-[50%] -translate-x-[50%] p-4 bg-white/50 shadow-md">
                     <div className="font-semibold">
