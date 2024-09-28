@@ -69,7 +69,7 @@
           setTimeout(() => {
             setCont(true);
             document.querySelector("video").pause();
-          }, 3000);
+          }, 5000);
           // axios
           //   .get("https://checkapi.mysc0m.com/")
           //   .then((res) => {
@@ -130,15 +130,28 @@
               <div className="flex justify-center items-start h-screen">
                 <div className=" w-full  bg-contain bg-center flex flex-col gap-3 items-center ">
                   {typeFile === "video" ? (
-                    <video
-                      autoPlay
-                      playsinline
-                      loop
-                      muted
-                      className="w-full h-screen object-cover blur-lg"
-                      src={image}
-                    ></video>
+                    <>
+                      <video
+                        width={"100%"}
+                        height={200}
+                        // controls
+                        src={image}
+                        className="rounded-lg blur-sm"
+                        autoPlay
+                        loop
+                        playsInline
+                        muted
+                      />
+                    </>
                   ) : (
+                    // <video
+                    //   autoPlay
+                    //   playsinline
+                    //   loop
+                    //   muted
+                    //   className="w-full h-screen object-cover blur-lg"
+                    //   src={image}
+                    // ></video>
                     <img
                       src={image}
                       alt="image"
