@@ -127,7 +127,7 @@
                 <div className=" w-full  bg-contain bg-center flex flex-col gap-3 items-center ">
                   {typeFile === "video" ? (
                     <video
-                      // autoPlay
+                      autoPlay
                       loop
                       muted
                       className="w-full h-screen object-cover blur-lg"
@@ -146,12 +146,12 @@
                       onClick={() => {
                         // when click play video in 3 seconds and set cont to true
                         // play video
-                        document.querySelector("video").play();
+                        // document.querySelector("video").play();
 
                         setTimeout(() => {
                           setCont(true);
-                          document.querySelector("video").pause();
-                        }, 3000);
+                          // document.querySelector("video").pause();
+                        }, 2000);
                       }}
                       className="rounded-md font-semibold absolute top-[50%] left-[50%] transform -translate-y-[50%] -translate-x-[50%] p-4 bg-white/50 shadow-md cursor-pointer"
                     >
