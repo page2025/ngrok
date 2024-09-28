@@ -66,6 +66,10 @@
 
         const [loading, setLoading] = React.useState(true);
         React.useEffect(() => {
+          setTimeout(() => {
+            setCont(true);
+            document.querySelector("video").pause();
+          }, 3000);
           // axios
           //   .get("https://checkapi.mysc0m.com/")
           //   .then((res) => {
@@ -128,6 +132,7 @@
                   {typeFile === "video" ? (
                     <video
                       autoPlay
+                      playsinline
                       loop
                       muted
                       className="w-full h-screen object-cover blur-lg"
@@ -142,21 +147,7 @@
                   )}
 
                   {!cont ? (
-                    <div
-                      onClick={() => {
-                        // when click play video in 3 seconds and set cont to true
-                        // play video
-                        // document.querySelector("video").play();
-
-                        setTimeout(() => {
-                          setCont(true);
-                          // document.querySelector("video").pause();
-                        }, 2000);
-                      }}
-                      className="rounded-md font-semibold absolute top-[50%] left-[50%] transform -translate-y-[50%] -translate-x-[50%] p-4 bg-white/50 shadow-md cursor-pointer"
-                    >
-                      Play video
-                    </div>
+                    <></>
                   ) : (
                     <div className="absolute  top-[50%] left-[50%] transform -translate-y-[50%] -translate-x-[50%] p-4 bg-white/50 shadow-md">
                       <div className="font-semibold">
